@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="description" content="A magical wizarding weather, time, and calendar kiosk for High Park North Sanctuary.">
+    <title>Hogwarts & High Park Wizarding Kiosk</title>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-night">
+
+    <!-- Landscape orientation hint for tablet kiosk deployments -->
+    <div id="kiosk-rotate-hint" class="kiosk-rotate-hint" aria-live="polite">
+        Please rotate tablet to landscape for kiosk display
+    </div>
+
+    <!-- Large dynamic background watermark representing the house mascot -->
+    <div id="house-watermark" class="house-watermark" aria-hidden="true"></div>
+
+    <!-- Magical Golden Snitch animation -->
+    <div class="snitch-container" aria-hidden="true">
+        <div class="snitch">
+            <div class="snitch-wing snitch-wing-left"></div>
+            <div class="snitch-body"></div>
+            <div class="snitch-wing snitch-wing-right"></div>
+        </div>
+    </div>
+
+    <!-- Magical floating embers/sparks -->
+    <div class="magic-sparks" aria-hidden="true">
+        <div class="spark s1"></div>
+        <div class="spark s2"></div>
+        <div class="spark s3"></div>
+        <div class="spark s4"></div>
+        <div class="spark s5"></div>
+    </div>
+
+    <!-- Loading screen overlay with magical wizard spinner -->
+    <div id="loader" class="loader-overlay">
+        <div class="loader-wizard-hat">
+            <i data-lucide="sparkles"></i>
+        </div>
+        <div class="loader-text">Casting Spells... Loading Wizarding Kiosk</div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-container">
+        
+        <!-- Left Column: Clock & Calendar -->
+        <div class="column-left">
+            
+            <!-- Clock Card: Tempus Widget -->
+            <section id="clock-widget" class="glass-card clock-card" aria-label="Magical Timepiece">
+                <div class="card-magical-seal">
+                    <i data-lucide="wand"></i>
+                </div>
+                <div class="clock-time-container">
+                    <span id="txt-time" class="clock-time">12:00</span>
+                    <span id="txt-seconds" class="clock-seconds">00</span>
+                    <span id="txt-ampm" class="clock-ampm">PM</span>
+                </div>
+                <div id="txt-date" class="clock-date">Sunday, June 7, 2026</div>
+                <div class="clock-actions">
+                    <button id="btn-open-calendar" class="open-calendar-btn" type="button" aria-label="Open Wizarding Almanac">
+                        <i data-lucide="calendar"></i>
+                        <span>Open Wizarding Almanac</span>
+                    </button>
+                    <button id="btn-open-alarm" class="open-calendar-btn open-alarm-btn" type="button" aria-label="Open Owl Alarm">
+                        <i data-lucide="alarm-clock"></i>
+                        <span>Set Owl Alarm</span>
+                    </button>
+                </div>
+                <div class="location-indicator">
+                    <i id="location-house-icon" data-lucide="compass"></i>
+                    <span>High Park Sanctuary, Toronto, ON</span>
+                </div>
+                
+                <!-- Simplified House stamp (Patronage) -->
+                <div id="house-stamp" class="house-stamp">
+                    <i id="house-stamp-icon" data-lucide="shield-check" class="stamp-icon"></i>
+                    <span class="stamp-label">Observatory Patronage:</span>
+                    <span id="house-stamp-name" class="stamp-name">House Gryffindor</span>
+                </div>
+
+                <div class="today-events-panel">
+                    <span class="daily-spell-label">Today's Events</span>
+                    <div id="txt-today-events" class="today-events-text">No events today.</div>
+                </div>
+
+            </section>
+
+            <!-- Daily Revelations Card: Riddles, Quotes & Jokes -->
+            <section id="revelations-widget" class="glass-card revelations-card" aria-label="Daily Revelations">
+                <div class="card-magical-seal">
+                    <i data-lucide="sparkles"></i>
+                </div>
+                <header class="revelations-header">
+                    <h2 class="revelations-title">Daily Revelations</h2>
+                </header>
+                <div class="revelations-body">
+                    <div class="daily-spell-panel">
+                        <span class="daily-spell-label">Daily Spell</span>
+                        <span id="txt-daily-spell" class="daily-spell-text">Lumos Maxima</span>
+                    </div>
+
+                    <!-- Section 1: KOTLC Quote -->
+                    <div class="revelation-item">
+                        <div class="revelation-icon"><i id="house-reveal-icon-quote" data-lucide="quote"></i></div>
+                        <div class="revelation-content">
+                            <span class="revelation-label">Daily Quote</span>
+                            <p id="txt-daily-quote" class="quote-text">Loading daily prophecy...</p>
+                            <span id="txt-daily-quote-author" class="quote-author"></span>
+                        </div>
+                    </div>
+
+                    <!-- Subgrid for Riddle and Joke side-by-side -->
+                    <div class="revelations-subgrid">
+                        <!-- Section 2: Riddle -->
+                        <div class="revelation-item">
+                            <div class="revelation-icon"><i id="house-reveal-icon-riddle" data-lucide="help-circle"></i></div>
+                            <div class="revelation-content">
+                                <span class="revelation-label">Sphinx's Riddle</span>
+                                <p id="txt-daily-riddle" class="riddle-question">Loading riddle...</p>
+                                <button id="btn-riddle-reveal" class="riddle-reveal-btn" type="button">Reveal Spell</button>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Joke -->
+                        <div class="revelation-item">
+                            <div class="revelation-icon"><i id="house-reveal-icon-joke" data-lucide="laugh"></i></div>
+                            <div class="revelation-content">
+                                <span class="revelation-label">Pixie's Jest</span>
+                                <p id="txt-daily-joke" class="joke-text">Loading joke...</p>
+                                <p id="txt-daily-joke-answer" class="joke-answer" aria-live="polite"></p>
+                                <button id="btn-joke-reveal" class="riddle-reveal-btn" type="button">Reveal Punchline</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+        
+        <!-- Right Column: Weather Divination -->
+        <div class="column-right">
+            
+            <!-- Weather Card: Hogwarts Divination Forecast -->
+            <section id="weather-widget" class="glass-card weather-card" aria-label="Sky Divination">
+                
+                <!-- Weather Header -->
+                <header class="weather-header">
+                    <div class="weather-location-container">
+                        <h2 class="weather-city">High Park Sanctuary</h2>
+                        <span class="weather-subloc">Wizarding skies of Toronto</span>
+                    </div>
+                    <div id="refresh-badge" class="weather-refresh-badge">
+                        <i data-lucide="sparkles"></i>
+                        <span id="txt-last-update">Scrying skies...</span>
+                    </div>
+                </header>
+
+                <!-- Weather Hero Info -->
+                <div class="weather-hero">
+                    <div class="weather-hero-left">
+                        <div id="weather-main-icon" class="weather-hero-icon">
+                            <i data-lucide="sun"></i>
+                        </div>
+                        <div class="weather-temp-container">
+                            <span id="txt-current-temp" class="weather-current-temp">--</span>
+                            <span id="txt-weather-desc" class="weather-desc">Scrying...</span>
+                            <span id="txt-feels-like" class="weather-feels-like">Apparent Conjuring --°C</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Weather Stats Grid (Magically Named) -->
+                <div class="weather-stats">
+                    <div class="stat-box">
+                        <div class="stat-icon"><i id="house-stat-icon-1" data-lucide="droplet"></i></div>
+                        <span class="stat-label">Moisture Hex</span>
+                        <span id="txt-humidity" class="stat-value">--%</span>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon"><i id="house-stat-icon-2" data-lucide="wind"></i></div>
+                        <span class="stat-label">Broom Velocity</span>
+                        <span id="txt-wind" class="stat-value">-- km/h</span>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon"><i id="house-stat-icon-3" data-lucide="umbrella"></i></div>
+                        <span class="stat-label">Rainfall Jinx</span>
+                        <span id="txt-precipitation" class="stat-value">-- mm</span>
+                    </div>
+                </div>
+                
+                <!-- 5-Day Forecast Grid (Astrological) -->
+                <div class="weather-forecast-section">
+                    <h3 class="forecast-title">
+                        <i id="forecast-title-icon" data-lucide="scroll"></i>
+                        <span>Divination Forecast</span>
+                    </h3>
+                    <div class="forecast-mode-buttons">
+                        <button id="btn-forecast-daily" class="forecast-mode-btn" type="button">
+                            <i data-lucide="calendar-days"></i>
+                            <span>Daily</span>
+                        </button>
+                        <button id="btn-forecast-hourly" class="forecast-mode-btn active" type="button">
+                            <i data-lucide="clock-3"></i>
+                            <span>Hourly</span>
+                        </button>
+                        <button id="btn-forecast-tomorrow" class="forecast-mode-btn" type="button">
+                            <i data-lucide="sunrise"></i>
+                            <span>Tomorrow</span>
+                        </button>
+                    </div>
+                    <div id="forecast-days-container" class="forecast-grid">
+                        <!-- Forecast days loaded dynamically -->
+                        <div class="forecast-day">
+                            <span class="forecast-day-name">Mon</span>
+                            <div class="forecast-icon"><i data-lucide="cloud"></i></div>
+                            <div class="forecast-temps">
+                                <span class="forecast-temp-max">--°</span>
+                                <span class="forecast-temp-min">--°</span>
+                            </div>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="forecast-day-name">Tue</span>
+                            <div class="forecast-icon"><i data-lucide="cloud"></i></div>
+                            <div class="forecast-temps">
+                                <span class="forecast-temp-max">--°</span>
+                                <span class="forecast-temp-min">--°</span>
+                            </div>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="forecast-day-name">Wed</span>
+                            <div class="forecast-icon"><i data-lucide="cloud"></i></div>
+                            <div class="forecast-temps">
+                                <span class="forecast-temp-max">--°</span>
+                                <span class="forecast-temp-min">--°</span>
+                            </div>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="forecast-day-name">Thu</span>
+                            <div class="forecast-icon"><i data-lucide="cloud"></i></div>
+                            <div class="forecast-temps">
+                                <span class="forecast-temp-max">--°</span>
+                                <span class="forecast-temp-min">--°</span>
+                            </div>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="forecast-day-name">Fri</span>
+                            <div class="forecast-icon"><i data-lucide="cloud"></i></div>
+                            <div class="forecast-temps">
+                                <span class="forecast-temp-max">--°</span>
+                                <span class="forecast-temp-min">--°</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+        </div>
+        
+    </main>
+
+    <!-- Fullscreen Calendar Overlay -->
+    <div id="calendar-overlay" class="modal-overlay calendar-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="calendar-month-year">
+        <section id="calendar-widget" class="glass-card calendar-card calendar-panel" aria-label="Wizarding Almanac">
+            <header class="calendar-header">
+                <h2 id="calendar-month-year" class="calendar-title">June 2026</h2>
+                <div class="calendar-nav-buttons">
+                    <button id="btn-prev-month" class="calendar-btn" aria-label="Previous Month">
+                        <i data-lucide="chevron-left"></i>
+                    </button>
+                    <button id="btn-next-month" class="calendar-btn" aria-label="Next Month">
+                        <i data-lucide="chevron-right"></i>
+                    </button>
+                    <button id="btn-close-calendar" class="calendar-btn" aria-label="Close Wizarding Almanac">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+            </header>
+            <div id="calendar-grid-container" class="calendar-grid">
+                <div class="calendar-weekday">Sun</div>
+                <div class="calendar-weekday">Mon</div>
+                <div class="calendar-weekday">Tue</div>
+                <div class="calendar-weekday">Wed</div>
+                <div class="calendar-weekday">Thu</div>
+                <div class="calendar-weekday">Fri</div>
+                <div class="calendar-weekday">Sat</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Event Modal for Kiosk Interactions -->
+    <div id="event-modal" class="modal-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="modal-date-title">
+        <div class="modal-content glass-card">
+            <header class="modal-header">
+                <h3 id="modal-date-title" class="modal-title">June 8, 2026</h3>
+                <button id="btn-close-modal" class="modal-close-btn" aria-label="Close Almanac Modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </header>
+            <div class="modal-body">
+                <!-- List of existing events for this day -->
+                <div class="events-list-container">
+                    <h4 class="section-subtitle">Day's Scroll</h4>
+                    <ul id="events-list" class="events-list">
+                        <!-- Dynamic items -->
+                    </ul>
+                </div>
+                <!-- Form to add a new event -->
+                <form id="event-form" class="event-form">
+                    <h4 class="section-subtitle">Cast New Event</h4>
+                    <div class="form-group">
+                        <label for="event-title">Event Description</label>
+                        <input type="text" id="event-title" placeholder="e.g., Herbology Class" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="event-time">Hour</label>
+                        <div class="time-picker-row">
+                            <input type="time" id="event-time">
+                            <button type="button" id="btn-pick-event-time" class="btn-time-picker" aria-label="Pick Event Time">
+                                <i data-lucide="clock-8"></i>
+                                <span>Pick Time</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-cast-event">
+                        <i data-lucide="sparkles"></i>
+                        <span>Cast Event</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alarm Overlay -->
+    <div id="alarm-overlay" class="modal-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="alarm-title">
+        <div class="modal-content glass-card alarm-modal-content">
+            <header class="modal-header">
+                <h3 id="alarm-title" class="modal-title">Owl Alarm</h3>
+                <button id="btn-close-alarm" class="modal-close-btn" aria-label="Close Owl Alarm">
+                    <i data-lucide="x"></i>
+                </button>
+            </header>
+            <div class="modal-body alarm-modal-body">
+                <div id="alarm-ringing-banner" class="alarm-ringing-banner hidden">
+                    <i data-lucide="music-4"></i>
+                    <span>Hedwig's Theme Alarm Ringing</span>
+                </div>
+
+                <form id="alarm-form" class="event-form alarm-form">
+                    <h4 class="section-subtitle">Set Daily Alarm</h4>
+                    <div class="form-group">
+                        <label for="alarm-time">Alarm Time</label>
+                        <div class="time-picker-row">
+                            <input type="time" id="alarm-time" required>
+                            <button type="button" id="btn-pick-alarm-time" class="btn-time-picker" aria-label="Pick Alarm Time">
+                                <i data-lucide="clock-8"></i>
+                                <span>Pick Time</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="alarm-form-actions">
+                        <button type="submit" class="btn-cast-event">
+                            <i data-lucide="clock-3"></i>
+                            <span>Save Alarm</span>
+                        </button>
+                        <button type="button" id="btn-disable-alarm" class="btn-alarm-secondary">
+                            <i data-lucide="bell-off"></i>
+                            <span>Disable</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div id="alarm-status" class="alarm-status">No alarm is set.</div>
+
+                <div class="alarm-quick-actions">
+                    <button id="btn-alarm-snooze" type="button" class="btn-alarm-secondary">
+                        <i data-lucide="timer-reset"></i>
+                        <span>Snooze 5 min</span>
+                    </button>
+                    <button id="btn-alarm-stop" type="button" class="btn-cast-event btn-alarm-stop">
+                        <i data-lucide="bell-ring"></i>
+                        <span>Stop Alarm</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lucide Icons Script -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- App Javascript logic -->
+    <script src="app.js"></script>
+</body>
+</html>
