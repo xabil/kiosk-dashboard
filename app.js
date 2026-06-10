@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let alarmState = loadAlarmState();
     let isAlarmRinging = false;
+    let isDashboardRefreshing = false;
     let fallbackAudioContext = null;
     let fallbackAlarmInterval = null;
 
@@ -463,7 +464,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function applyHouseVisuals(house) {
         if (house === 'gryffindor') {
-            if (houseStampName) houseStampName.textContent = 'House Gryffindor';
+            if (houseStampName) houseStampName.textContent = 'Gryffindor House';
 
             setIcon(locationHouseIcon, 'compass');
             setIcon(houseStampIcon, 'shield-check');
@@ -489,7 +490,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
             }
         } else {
-            if (houseStampName) houseStampName.textContent = 'House Slytherin';
+            if (houseStampName) houseStampName.textContent = 'Slytherin House';
 
             setIcon(locationHouseIcon, 'map-pinned');
             setIcon(houseStampIcon, 'shield');
@@ -2591,7 +2592,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         txtDailyRiddle.textContent = riddle.question;
         currentRiddleAnswer = riddle.answer;
         if (btnRiddleReveal) {
-            btnRiddleReveal.textContent = 'Reveal Spell';
+            btnRiddleReveal.textContent = 'Reveal';
             btnRiddleReveal.classList.remove('revealed');
         }
         txtDailyJoke.textContent = joke.question;
@@ -2601,8 +2602,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             txtDailyJokeAnswer.classList.remove('revealed');
         }
         if (btnJokeReveal) {
-            btnJokeReveal.textContent = 'Reveal Punchline';
+            btnJokeReveal.textContent = 'Reveal';
             btnJokeReveal.classList.remove('revealed');
+        }
+    }
+
+    async function refreshDashboardData({ refreshRevelations = false } = {}) {
+        if (isDashboardRefreshing) {
+            return;
+        }
+
+        isDashboardRefreshing = true;
+
+        try {
+            await fetchWeather();
+            if (refreshRevelations) {
+                updateDailyRevelations(new Date());
+            }
+        } finally {
+            isDashboardRefreshing = false;
         }
     }
 
@@ -2611,7 +2629,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!currentRiddleAnswer) return;
             const isRevealed = btnRiddleReveal.classList.contains('revealed');
             if (isRevealed) {
-                btnRiddleReveal.textContent = 'Reveal Spell';
+                btnRiddleReveal.textContent = 'Reveal';
                 btnRiddleReveal.classList.remove('revealed');
             } else {
                 btnRiddleReveal.textContent = currentRiddleAnswer;
@@ -2625,7 +2643,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!currentJokeAnswer) return;
             const isRevealed = btnJokeReveal.classList.contains('revealed');
             if (isRevealed) {
-                btnJokeReveal.textContent = 'Reveal Punchline';
+                btnJokeReveal.textContent = 'Reveal';
                 btnJokeReveal.classList.remove('revealed');
             } else {
                 btnJokeReveal.textContent = currentJokeAnswer;
@@ -2640,8 +2658,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadDailyQuotesFromJson();
     const initialHouse = getDailyRandomHouse(new Date());
     applyHouseVisuals(initialHouse);
-    fetchWeather();
-    updateDailyRevelations();
+    await refreshDashboardData({ refreshRevelations: true });
 
     if (btnForecastDaily) {
         btnForecastDaily.addEventListener('click', () => setForecastMode('daily'));
@@ -2652,9 +2669,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnForecastTomorrow) {
         btnForecastTomorrow.addEventListener('click', () => setForecastMode('tomorrow'));
     }
+    if (refreshBadge) {
+        refreshBadge.addEventListener('click', () => {
+            refreshDashboardData({ refreshRevelations: true });
+        });
+    }
 
     // Weather refresh cadence
-    setInterval(fetchWeather, 15 * 60 * 1000);
+    setInterval(() => {
+        refreshDashboardData();
+    }, 5 * 60 * 1000);
 
     // Refresh revelations right after midnight
     setInterval(() => {

@@ -95,9 +95,6 @@
                 <div class="card-magical-seal">
                     <i data-lucide="sparkles"></i>
                 </div>
-                <header class="revelations-header">
-                    <h2 class="revelations-title">Daily Revelations</h2>
-                </header>
                 <div class="revelations-body">
                     <div class="daily-spell-panel">
                         <span class="daily-spell-label">Daily Spell</span>
@@ -122,7 +119,7 @@
                             <div class="revelation-content">
                                 <span class="revelation-label">Sphinx's Riddle</span>
                                 <p id="txt-daily-riddle" class="riddle-question">Loading riddle...</p>
-                                <button id="btn-riddle-reveal" class="riddle-reveal-btn" type="button">Reveal Spell</button>
+                                <button id="btn-riddle-reveal" class="riddle-reveal-btn" type="button">Reveal</button>
                             </div>
                         </div>
 
@@ -133,7 +130,7 @@
                                 <span class="revelation-label">Pixie's Jest</span>
                                 <p id="txt-daily-joke" class="joke-text">Loading joke...</p>
                                 <p id="txt-daily-joke-answer" class="joke-answer" aria-live="polite"></p>
-                                <button id="btn-joke-reveal" class="riddle-reveal-btn" type="button">Reveal Punchline</button>
+                                <button id="btn-joke-reveal" class="riddle-reveal-btn" type="button">Reveal</button>
                             </div>
                         </div>
                     </div>
@@ -154,10 +151,10 @@
                         <h2 class="weather-city">High Park Sanctuary</h2>
                         <span class="weather-subloc">Wizarding skies of Toronto</span>
                     </div>
-                    <div id="refresh-badge" class="weather-refresh-badge">
+                    <button id="refresh-badge" class="weather-refresh-badge" type="button" aria-label="Refresh dashboard now">
                         <i data-lucide="sparkles"></i>
                         <span id="txt-last-update">Scrying skies...</span>
-                    </div>
+                    </button>
                 </header>
 
                 <!-- Weather Hero Info -->

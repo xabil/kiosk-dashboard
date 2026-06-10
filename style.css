@@ -28,8 +28,7 @@
     --card-radius: 20px;
 }
 
-/* Dynamic Wizarding Weather Themes */
-
+    appearance: none;
 /* SUNNY: Gryffindor Theme (Scarlet & Gold) */
 .theme-sunny {
     --bg-gradient-1: #1a0508;
@@ -39,6 +38,8 @@
     --accent-glow: rgba(245, 176, 37, 0.4);
     --card-bg: rgba(43, 11, 15, 0.6);
     --card-border: rgba(245, 176, 37, 0.22);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 /* CLOUDY: Hufflepuff Theme (Bronze, Yellow & Dark Grey) */
@@ -333,7 +334,7 @@ body::before {
     display: block;
     max-width: 100%;
     font-family: var(--font-magic-title);
-    font-size: 1.3rem;
+    font-size: 1.14rem;
     line-height: 1.2;
     font-weight: 700;
     color: var(--accent-color);
@@ -771,6 +772,7 @@ body::before {
 }
 
 .weather-refresh-badge {
+    appearance: none;
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -781,11 +783,21 @@ body::before {
     border-radius: 100px;
     color: var(--text-secondary);
     border: 1px solid rgba(212, 175, 55, 0.15);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 .weather-refresh-badge.updating i {
     animation: rotateMagic 1.5s linear infinite;
     color: var(--accent-color);
+}
+
+.weather-refresh-badge:hover,
+.weather-refresh-badge:focus-visible {
+    color: var(--accent-color);
+    border-color: rgba(212, 175, 55, 0.45);
+    background: rgba(212, 175, 55, 0.12);
+    outline: none;
 }
 
 @keyframes rotateMagic {
@@ -1607,6 +1619,11 @@ body::before {
     gap: 0.65rem;
 }
 
+.alarm-form-actions .btn-cast-event,
+.alarm-quick-actions .btn-cast-event {
+    margin-top: 0;
+}
+
 .btn-alarm-secondary {
     border: 1px solid rgba(212, 175, 55, 0.25);
     border-radius: 12px;
@@ -1880,6 +1897,11 @@ body::before {
     .revelations-subgrid {
         grid-template-columns: 1fr;
     }
+
+    .alarm-form-actions,
+    .alarm-quick-actions {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Landscape tablet kiosks: keep 2-column dashboard, tighten spacing */
@@ -1946,7 +1968,7 @@ body::before {
     }
 
     .daily-spell-text {
-        font-size: 1.14rem;
+        font-size: 1.02rem;
     }
 
     .mascot-name {
