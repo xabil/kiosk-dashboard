@@ -1971,6 +1971,18 @@ body::before {
         font-size: 0.82rem;
     }
 
+    /* Prevent clipping of riddle/joke on narrow tablet heights by allowing
+       the revelations card to flow and enabling internal scrolling if needed */
+    .revelations-card {
+        height: auto;
+        min-height: 0;
+    }
+
+    .revelations-body {
+        overflow: auto;
+        padding-right: 0.25rem; /* room for scrollbar when present */
+    }
+
     .mascot-name {
         font-size: 1.02rem;
     }
