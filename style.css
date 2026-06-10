@@ -334,7 +334,7 @@ body::before {
     display: block;
     max-width: 100%;
     font-family: var(--font-magic-title);
-    font-size: 1.14rem;
+    font-size: 0.82rem;
     line-height: 1.2;
     font-weight: 700;
     color: var(--accent-color);
@@ -1145,13 +1145,6 @@ body::before {
     border-bottom: 1px dotted rgba(212, 175, 55, 0.15);
 }
 
-/* Reduce size of the Daily Spell inside the revelations card to avoid
-   clipping the riddle and joke panels */
-.revelations-card .daily-spell-text {
-    font-size: 0.96rem;
-    line-height: 1.15;
-    max-width: 100%;
-}
 .revelation-item {
     display: flex;
     gap: 0.55rem;
@@ -1975,7 +1968,7 @@ body::before {
     }
 
     .daily-spell-text {
-        font-size: 1.02rem;
+        font-size: 0.82rem;
     }
 
     .mascot-name {
