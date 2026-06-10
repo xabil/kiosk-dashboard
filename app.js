@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let selectedDateKey = ''; // Holds key: YYYY-MM-DD
 
     // Persistent Wizarding Events
-    const events = JSON.parse(localStorage.getItem('wizard_kiosk_events') || '{}');
+    const events = parseStoredEvents();
     let lastWeatherData = null;
     let forecastMode = 'hourly';
 
@@ -115,6 +115,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     let isDashboardRefreshing = false;
     let fallbackAudioContext = null;
     let fallbackAlarmInterval = null;
+    const WEATHER_FETCH_TIMEOUT_MS = 12000;
+    const LOADER_FAILSAFE_MS = 15000;
+
+    // Failsafe: never leave kiosk stuck on the loading overlay.
+    setTimeout(() => {
+        if (loader && !loader.classList.contains('fade-out')) {
+            loader.classList.add('fade-out');
+        }
+    }, LOADER_FAILSAFE_MS);
+
+    function parseStoredEvents() {
+        try {
+            const raw = localStorage.getItem('wizard_kiosk_events');
+            if (!raw) return {};
+
+            const parsed = JSON.parse(raw);
+            return parsed && typeof parsed === 'object' ? parsed : {};
+        } catch (error) {
+            console.warn('Failed to parse wizard events, resetting storage:', error);
+            localStorage.removeItem('wizard_kiosk_events');
+            return {};
+        }
+    }
+
+    async function fetchWithTimeout(url, timeoutMs) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+        try {
+            return await fetch(url, { signal: controller.signal });
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
 
     function loadAlarmState() {
         try {
@@ -1112,10 +1146,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Weather Fetching & Theme Mapping
     // ==========================================
     async function fetchWeather() {
-        refreshBadge.classList.add('updating');
+        if (refreshBadge) {
+            refreshBadge.classList.add('updating');
+        }
         
         try {
-            const response = await fetch(WEATHER_URL);
+            const response = await fetchWithTimeout(WEATHER_URL, WEATHER_FETCH_TIMEOUT_MS);
             if (!response.ok) throw new Error('Skies scrying failed');
             const data = await response.json();
             
@@ -1127,7 +1163,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Spells failed to scry weather:', error);
-            txtWeatherDesc.textContent = 'Astral Blocks';
+            if (txtWeatherDesc) {
+                txtWeatherDesc.textContent = 'Astral Blocks';
+            }
             
             // Fade out loader on error after delay
             setTimeout(() => {
@@ -1136,7 +1174,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }, 3000);
         } finally {
-            refreshBadge.classList.remove('updating');
+            if (refreshBadge) {
+                refreshBadge.classList.remove('updating');
+            }
         }
     }
 
